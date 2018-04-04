@@ -1,6 +1,6 @@
 # ansible-plays-tl
 
-Ansible playbook for the (JVM Development Environment)[https://github.com/kurron/jvm-development-environment]
+Ansible playbook for the [JVM Development Environment](https://github.com/kurron/jvm-development-environment)
 to install both common use and development related tools for my workspace at Transparent Language.
 
 The JVM Development Environment created by @kurron already provides many helpful tools and software.
