@@ -1,0 +1,86 @@
+- name: Install Python development libs
+  apt:
+    name: python-dev
+    state: present
+
+- name: Install Python (3.6) development libs
+  apt:
+    name: python3.6-dev
+    state: present
+
+- name: Install httpie cli
+  pip:
+    name: httpie
+    state: present
+
+- name: Install AWS cli
+  pip:
+    name: awscli
+    version: 1.11.130
+    state: present
+
+# https://github.com/ansible/ansible/issues/20492#issuecomment-274081101
+- name: Install docker compose
+  pip:
+    name: docker-compose
+    version: 1.9.0
+    state: present
+
+# check if mongodb-compass installed
+- name: Check mongodb compass Installed
+  shell: which mongodb-compass
+  register: compass_check
+  ignore_errors: True
+
+- name: Install mongodb compass
+  shell: |
+    wget -O /tmp/compass.deb https://downloads.mongodb.com/compass/mongodb-compass_1.11.1_amd64.deb
+    dpkg --install /tmp/compass.deb
+    rm -rf /tmp/compass.deb
+  when: compass_check.rc == 1
+
+  # check if sqlectron installed
+- name: Check sqlectron Installed
+  shell: which sqlectron
+  register: sqlectron_check
+  ignore_errors: True
+
+- name: Install sqlectron
+  shell: |
+    wget -O /tmp/sqlectron.deb https://github.com/sqlectron/sqlectron-gui/releases/download/v1.29.0/Sqlectron_1.29.0_amd64.deb
+    dpkg --install /tmp/sqlectron.deb
+    rm -rf /tmp/sqlectron.deb
+  when: sqlectron_check.rc == 1
+
+- name: Install Code Extensions
+  shell: |
+    code --install-extension ms-python.python
+    code --install-extension EditorConfig.EditorConfig
+    code --install-extension abusaidm.html-snippets
+    code --install-extension arcticicestudio.nord-visual-studio-code
+    code --install-extension christian-kohler.npm-intellisense
+    code --install-extension christian-kohler.path-intellisense
+    code --install-extension dbaeumer.vscode-eslint
+    code --install-extension dzannotti.vscode-babel-coloring
+    code --install-extension eg2.vscode-npm-script
+    code --install-extension PKief.material-icon-theme
+    code --install-extension formulahendry.terminal
+    code --install-extension hnw.vscode-auto-open-markdown-preview
+    code --install-extension jasonnutter.search-node-modules
+    code --install-extension marcostazi.VS-code-vagrantfile
+    code --install-extension octref.vetur
+    code --install-extension waderyan.nodejs-extension-pack
+    code --install-extension xabikos.JavaScriptSnippets
+    code --install-extension zhuangtongfa.Material-theme
+    code --install-extension dracula-theme.theme-dracula
+    code --install-extension Equinusocio.vsc-material-theme
+    code --install-extension raashida.fixthecode-vs
+    code --install-extension lextudio.restructuredtext
+    code --install-extension loiane.ts-extension-pack
+    code --install-extension wesbos.theme-cobalt2
+    code --install-extension josef.rouge-theme
+    code --install-extension eamodio.gitlens
+    code --install-extension formulahendry.auto-close-tag
+    code --install-extension wayou.vscode-todo-highlight
+  become: False
+  ignore_errors: True

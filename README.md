@@ -13,21 +13,20 @@ This playbook uses roles for modularity.
 
 #### Common
 
-* Install file-roller (archive manager).
-* Install nano (terminal text editor).
-* Install curl (cli http tool).
+* Install file-roller (xfce4 compatible archive manager).
 * Install httpie (cli http tool).
 * Install gedit (gui text editor).
-* Install vlc media player (media management).
 * Install gyazo screen capture.
+* Install plank (osx drawer)
 
 #### Development
 
+* Install python dev libs.
+* Install docker-compose.
 * Install aws-cli.
-* install mongodb compass.
+* Install mongodb compass.
 * Install sqlectron.
-* Install node.js 8 stable (using n tool).
-* Install coffeescript.
+* Install vs-code themes and extensions (Python/Web).
 
 ## Use
 
