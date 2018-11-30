@@ -1,37 +1,163 @@
-- name: Install build essentials for ubuntu
+- name: Install Python development libs
   apt:
-    name: build-essential
+    name: python-dev
     state: present
 
-- name: Install gedit text editor
+- name: Install Python (3.6) development libs
   apt:
-    name: gedit
+    name: python3.6-dev
     state: present
 
-- name: Intall file-roller archive manager
+- name: Install Python (3.7)
   apt:
-    name: file-roller
+    name: python3.7
     state: present
 
-- name: Install plank for app dock
+- name: Install Python (3.7) development libs
   apt:
-    name: plank
+    name: python3.7-dev
     state: present
 
-- name: Install bash completion
-  apt:
-    name: bash-completion
+- name: Install httpie cli
+  pip:
+    name: httpie
     state: present
 
-- name: Check Gyazo installed
-  shell: which gyazo
-  register: gyazo_check
+- name: Install AWS cli
+  pip:
+    name: awscli
+    version: 1.11.130
+    state: present
+
+# https://github.com/ansible/ansible/issues/20492#issuecomment-274081101
+- name: Install docker compose
+  pip:
+    name: docker-compose
+    version: 1.9.0
+    state: present
+
+# check if mongodb-compass installed
+- name: Check mongodb compass Installed
+  shell: which mongodb-compass
+  register: compass_check
   ignore_errors: True
 
-# instructions taken from gyazo for linux
-# https://github.com/gyazo/Gyazo-for-Linux
-- name: Install Gyazo
+- name: Install mongodb compass
   shell: |
-    curl -s https://packagecloud.io/install/repositories/gyazo/gyazo-for-linux/script.deb.sh | sudo bash
-    apt-get install gyazo -y
-  when: gyazo_check.rc == 1
+    wget -O /tmp/compass.deb https://downloads.mongodb.com/compass/mongodb-compass_1.11.1_amd64.deb
+    dpkg --install /tmp/compass.deb
+    rm -rf /tmp/compass.deb
+  when: compass_check.rc == 1
+
+  # check if sqlectron installed
+- name: Check sqlectron Installed
+  shell: which sqlectron
+  register: sqlectron_check
+  ignore_errors: True
+
+- name: Install sqlectron
+  shell: |
+    wget -O /tmp/sqlectron.deb https://github.com/sqlectron/sqlectron-gui/releases/download/v1.29.0/Sqlectron_1.29.0_amd64.deb
+    dpkg --install /tmp/sqlectron.deb
+    rm -rf /tmp/sqlectron.deb
+  when: sqlectron_check.rc == 1
+
+- name: Install Code
+  shell: snap install vscode --classic
+
+- name: Install Code Extensions
+  shell: |
+    code --install-extension ms-python.python
+    code --install-extension redhat.java
+    code --install-extension EditorConfig.EditorConfig
+    code --install-extension abusaidm.html-snippets
+    code --install-extension arcticicestudio.nord-visual-studio-code
+    code --install-extension christian-kohler.npm-intellisense
+    code --install-extension christian-kohler.path-intellisense
+    code --install-extension crisward.riot-tag
+    code --install-extension dbaeumer.vscode-eslint
+    code --install-extension dzannotti.vscode-babel-coloring
+    code --install-extension eg2.vscode-npm-script
+    code --install-extension PKief.material-icon-theme
+    code --install-extension formulahendry.terminal
+    code --install-extension gerane.Theme-azure
+    code --install-extension hnw.vscode-auto-open-markdown-preview
+    code --install-extension jasonnutter.search-node-modules
+    code --install-extension liuji-jim.vue
+    code --install-extension marcostazi.VS-code-vagrantfile
+    code --install-extension octref.vetur
+    code --install-extension waderyan.nodejs-extension-pack
+    code --install-extension xabikos.JavaScriptSnippets
+    code --install-extension zhuangtongfa.Material-theme
+    code --install-extension dracula-theme.theme-dracula
+    code --install-extension Equinusocio.vsc-material-theme
+    code --install-extension alireza94.theme-gotham
+    code --install-extension raashida.fixthecode-vs
+    code --install-extension gerane.theme-artschool
+    code --install-extension lextudio.restructuredtext
+    code --install-extension loiane.ts-extension-pack
+    code --install-extension wesbos.theme-cobalt2
+    code --install-extension josef.rouge-theme
+    code --install-extension eamodio.gitlens
+    code --install-extension formulahendry.auto-close-tag
+    code --install-extension wayou.vscode-todo-highlight
+    code --install-extension yahya-gilany.vscode-pomodoro
+    code --install-extensions primalmotion.primal
+    code --install-extension ulthes.theme-firewatch
+    code --install-extension monokai.theme-monokai-pro-vscode
+    code --install-extension teabyii.ayu
+    code --install-extension nonylene.dark-molokai-theme
+    code --install-extension marvinhagemeister.theme-afterglow-remastered
+    code --install-extension ms-vscode.theme-1337
+    code --install-extension glennsl.vscode-duotone-dark-faithful
+    code --install-extension ryu1kn.text-marker
+  become: False
+  ignore_errors: True
+
+- name: Add vim8 ppa
+  apt_repository:
+    validate_certs: no
+    repo: ppa:jonathonf/vim
+    state: present
+
+- name: Install vim
+  apt:
+    name: vim
+    state: present
+    
+- name: Install apt-vim
+  shell: |
+    curl -sL https://raw.githubusercontent.com/egalpin/apt-vim/master/install.sh | sh
+    chmod +x "{{home_directory}}/apt-vim/apt-vim"
+    cat "{{home_directory}}/.bashrc" | grep apt-vim || echo "alias apt-vim='{{home_directory}}/apt-vim/apt-vim' >> {{home_directory}}/.bashrc"
+    cat "{{home_directory}}/.zshrc" | grep apt-vim || echo "alias apt-vim='{{home_directory}}/apt-vim/apt-vim' >> {{home_directory}}/.zshrc"
+  become: False
+  
+- name: Install vim plugins
+  shell: |
+    alias apt-vim="{{home_directory}}/apt-vim/apt-vim"
+    apt-vim install -y https://github.com/scrooloose/nerdtree.git
+    apt-vim install -y https://github.com/vim-python/python-syntax.git
+    apt-vim install -y https://github.com/nvie/vim-flake8.git
+    apt-vim install -y https://github.com/Valloric/YouCompleteMe.git
+    apt-vim install -y https://github.com/ryym/vim-riot.git
+    apt-vim install -y https://github.com/leafgarland/typescript-vim.git
+    apt-vim install -y https://github.com/kchmck/vim-coffee-script.git
+    apt-vim install -y https://github.com/mxw/vim-jsx.git
+    apt-vim install -y https://github.com/pangloss/vim-javascript.git
+    apt-vim install -y https://github.com/posva/vim-vue.git
+    apt-vim install -y https://github.com/itchyny/vim-gitbranch.git
+    apt-vim install -y https://github.com/tpope/vim-fugitive.git
+    apt-vim install -y https://github.com/ctrlpvim/ctrlp.vim.git
+    apt-vim install -y https://github.com/sgur/vim-editorconfig.git
+  become: False
+
+- name: Install editorconfig core
+  apt:
+    name: editorconfig
+    state: present
+
+- name: Install gvim
+  apt:
+    name: vim-gnome
+    state: present
