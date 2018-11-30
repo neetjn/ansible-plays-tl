@@ -17,16 +17,23 @@ This playbook uses roles for modularity.
 * Install httpie (cli http tool).
 * Install gedit (gui text editor).
 * Install gyazo screen capture.
-* Install plank (osx drawer)
+* Install i3 window manager (with nitrogen and i3blocks).
+* Install tmux.
+* Install zsh.
+* Install snapd.
 
 #### Development
 
+* Install python 3.7.
 * Install python dev libs.
 * Install docker-compose.
 * Install aws-cli.
 * Install mongodb compass.
 * Install sqlectron.
-* Install vs-code themes and extensions (Python/Web).
+* Install vs-code, themes and extensions (Python/Web).
+* Install vim8.
+* Install gvim.
+
 
 ## Use
 

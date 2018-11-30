@@ -45,11 +45,6 @@
   apt:
     name: nitrogen
     state: present
-
-- name: Install audio control for i3 - pavu
-  apt:
-    name: pavucontrol
-    state: present
     
 - name: Install tmux
   apt:
